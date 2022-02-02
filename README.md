@@ -17,10 +17,10 @@ kurinji = "*"
 
 ```rust
 fn main() {
-    App::build()
+    App::new()
         .add_plugin(KurinjiPlugin::default())
-        .add_startup_system(setup.system())
-        .add_system(system.system())
+        .add_startup_system(setup)
+        .add_system(system)
         .run();
 }
 

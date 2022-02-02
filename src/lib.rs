@@ -31,7 +31,7 @@ pub enum KurinjiStage {
 #[derive(Default)]
 pub struct KurinjiPlugin;
 impl Plugin for KurinjiPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app
             // input map
             .init_resource::<Kurinji>()
@@ -43,7 +43,7 @@ impl Plugin for KurinjiPlugin {
             .add_system_to_stage(
                 CoreStage::PreUpdate,
                 Kurinji::action_reset_system
-                    .system()
+                    
                     .label(KurinjiStage::Reset),
             )
             .add_system_set_to_stage(
@@ -51,20 +51,20 @@ impl Plugin for KurinjiPlugin {
                 SystemSet::new()
                     .label(KurinjiStage::InputCapture)
                     .after(KurinjiStage::Reset)
-                    .with_system(Kurinji::gamepad_event_system.system())
+                    .with_system(Kurinji::gamepad_event_system)
                     .with_system(
-                        Kurinji::gamepad_button_press_input_system.system(),
+                        Kurinji::gamepad_button_press_input_system,
                     )
-                    .with_system(Kurinji::kb_key_press_input_system.system())
+                    .with_system(Kurinji::kb_key_press_input_system)
                     .with_system(
-                        Kurinji::mouse_button_press_input_system.system(),
+                        Kurinji::mouse_button_press_input_system,
                     )
-                    .with_system(Kurinji::mouse_move_event_system.system()),
+                    .with_system(Kurinji::mouse_move_event_system),
             )
             .add_system_to_stage(
                 CoreStage::PreUpdate,
                 Kurinji::action_event_producer
-                    .system()
+                    
                     .label(KurinjiStage::Event)
                     .after(KurinjiStage::InputCapture),
             );

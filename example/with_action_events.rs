@@ -5,13 +5,13 @@ use bevy::ecs::system::ResMut;
 use kurinji::{OnActionActive, OnActionEnd, Kurinji, KurinjiPlugin};
 fn main() {
     println!("Kurinji Action Events");
-    App::build()
+    App::new()
         .add_plugins(DefaultPlugins)
         // setup
         .add_plugin(KurinjiPlugin::default())
-        .add_startup_system(setup.system())
-        .add_system(action_active_events_system.system())
-        .add_system(action_end_events_system.system())
+        .add_startup_system(setup)
+        .add_system(action_active_events_system)
+        .add_system(action_end_events_system)
         .run();
 }
 fn setup(mut kurinji: ResMut<Kurinji>) {

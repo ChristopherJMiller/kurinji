@@ -6,12 +6,12 @@ use bevy::ecs::system::ResMut;
 use kurinji::{Kurinji, KurinjiPlugin};
 fn main() {
     println!("Kurinji Binding From Json Example");
-    App::build()
+    App::new()
         .add_plugins(DefaultPlugins)
         // setup
         .add_plugin(KurinjiPlugin::default())
-        .add_startup_system(setup.system())
-        .add_system(action_system.system())
+        .add_startup_system(setup)
+        .add_system(action_system)
         .run();
 }
 fn setup(mut kurinji: ResMut<Kurinji>) {
