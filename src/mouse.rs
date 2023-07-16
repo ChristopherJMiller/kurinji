@@ -1,6 +1,6 @@
 use crate::{MouseAxis, Kurinji, util::clamp_vec2};
+use bevy::prelude::EventReader;
 use bevy::{math::Vec2, prelude::MouseButton};
-use bevy::app::EventReader;
 use bevy::ecs::system::{Res, ResMut};
 use bevy::input::{mouse::MouseMotion, Input};
 impl Kurinji {

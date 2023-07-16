@@ -89,24 +89,7 @@ impl Kurinji {
                 }
                 None
             }
-            bevy::input::gamepad::GamepadAxisType::DPadX => {
-                if str > 0.0 {
-                    return Some(GamepadAxis::DPadXPositive);
-                }
-                if str < 0.0 {
-                    return Some(GamepadAxis::DPadXNegative);
-                }
-                None
-            }
-            bevy::input::gamepad::GamepadAxisType::DPadY => {
-                if str > 0.0 {
-                    return Some(GamepadAxis::DPadYPositive);
-                }
-                if str < 0.0 {
-                    return Some(GamepadAxis::DPadYNegative);
-                }
-                None
-            }
+            _ => None
         }
     }
 }

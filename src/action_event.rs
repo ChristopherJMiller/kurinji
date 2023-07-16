@@ -1,28 +1,32 @@
 use crate::Kurinji;
 use bevy::ecs::system::Res;
-use bevy::prelude::EventWriter;
+use bevy::prelude::*;
 
 /// Event that is fired when action is active.
 /// This depends on what event phase is set to
 /// the action by default it will be OnProgress.
+#[derive(Event)]
 pub struct OnActionActive {
     pub action: String,
     pub strength: f32,
 }
 /// Event that gets fired at the beginning
 /// of an action
+#[derive(Event)]
 pub struct OnActionBegin {
     pub action: String,
     pub strength: f32,
 }
 /// Event that gets fired during
 /// an action
+#[derive(Event)]
 pub struct OnActionProgress {
     pub action: String,
     pub strength: f32,
 }
 /// Event that gets fired at the end
 /// of an action
+#[derive(Event)]
 pub struct OnActionEnd {
     pub action: String,
 }

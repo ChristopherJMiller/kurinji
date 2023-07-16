@@ -1,6 +1,6 @@
 use crate::{GamepadAxis, Kurinji};
+use bevy::input::gamepad::{GamepadEvent, GamepadConnection};
 use bevy::prelude::*;
-use bevy::app::EventReader;
 use bevy::ecs::system::ResMut;
 
 impl Kurinji {
@@ -109,8 +109,8 @@ impl Kurinji {
     ) {
         let button_bindings_iter = input_map.joystick_button_binding.clone();
         for (player_button_bind, action) in button_bindings_iter.iter() {
-            if joystick_button_input.pressed(GamepadButton(
-                Gamepad(player_button_bind.0),
+            if joystick_button_input.pressed(GamepadButton::new(
+                Gamepad::new(player_button_bind.0),
                 player_button_bind.1,
             )) {
                 input_map.set_raw_action_strength(action, 1.0);
@@ -123,67 +123,64 @@ impl Kurinji {
         mut reader: EventReader<GamepadEvent>,
     ) {
         for event in reader.iter() {
-            let pad_handle = event.0;
-            let pad_event_type = event.clone().1;
-            match pad_event_type {
-                bevy::prelude::GamepadEventType::AxisChanged(
-                    axis_type,
-                    axis_str,
-                ) => {
+            match event {
+                GamepadEvent::Axis(axis_event) => {
                     if let Some(axis_type) =
                         Kurinji::get_pad_axis_from_bevy_gamepad_axis_type(
-                            axis_type, axis_str,
+                            axis_event.axis_type, axis_event.value,
                         )
                     {
                         if let Some(action) = input_map
                             .clone()
                             .joystick_axis_binding
-                            .get(&(pad_handle.0, axis_type))
+                            .get(&(axis_event.gamepad.id, axis_type))
                         {
                             input_map
                                 .joystick_last_action_data
-                                .insert(action.to_string(), axis_str.abs());
+                                .insert(action.to_string(), axis_event.value.abs());
                         }
                     }
-                }
-                bevy::prelude::GamepadEventType::Connected => {
-                    let res_player_handle =
+                },
+                GamepadEvent::Connection(conn) => match conn.connection {
+                    GamepadConnection::Connected(_) => {
+                        let res_player_handle =
                         input_map.clone().get_available_player_handle();
                     match res_player_handle {
                         Some(player_handle) => {
                             println!(
                                 "InputMap: Gamepad Connected {:?} to player {}",
-                                pad_handle, player_handle
+                                conn.gamepad, player_handle
                             );
                             input_map
                                 .player_handles_in_use
                                 .insert(player_handle);
                             input_map
                                 .joystick_to_player_map
-                                .insert(pad_handle, player_handle);
+                                .insert(conn.gamepad, player_handle);
                             input_map
                                 .player_to_joystick_map
-                                .insert(player_handle, pad_handle);
+                                .insert(player_handle, conn.gamepad);
                         }
                         None => {
                             println!("InputMap: Housefull. No space for more gamepads");
                         }
                     }
-                }
-                bevy::prelude::GamepadEventType::Disconnected => {
-                    let opt_player_handle = input_map
+                    },
+                    GamepadConnection::Disconnected => {
+                        let opt_player_handle = input_map
                         .clone()
-                        .get_player_handle_for_gamepad(pad_handle);
+                        .get_player_handle_for_gamepad(conn.gamepad);
                     if let Some(player_handle) = opt_player_handle {
                         println!(
                             "InputMap: Gamepad Disconnected {:?} for player {}",
-                            pad_handle, player_handle
+                            conn.gamepad, player_handle
                         );
                         input_map.player_handles_in_use.remove(&player_handle);
-                        input_map.joystick_to_player_map.remove(&pad_handle);
+                        input_map.joystick_to_player_map.remove(&conn.gamepad);
                         input_map.player_to_joystick_map.remove(&player_handle);
                     }
-                }
+                    },
+                },
                 _ => (),
             }
         }

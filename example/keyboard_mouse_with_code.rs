@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 use bevy::app::AppExit;
-use bevy::app::Events;
 use bevy::ecs::system::ResMut;
 use kurinji::{EventPhase, MouseAxis, Kurinji, KurinjiPlugin};
 fn main() {
@@ -8,9 +7,9 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         // setup
-        .add_plugin(KurinjiPlugin::default())
-        .add_startup_system(setup)
-        .add_system(action_system)
+        .add_plugins(KurinjiPlugin::default())
+        .add_systems(Startup, setup)
+        .add_systems(Update, action_system)
         .run();
 }
 fn setup(mut kurinji: ResMut<Kurinji>) {

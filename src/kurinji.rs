@@ -7,7 +7,7 @@ impl Kurinji {
     pub const MAX_PLAYER_HANDLES: usize = 8;
 }
 /// Resource to access all Kurinji APIs
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Resource)]
 pub struct Kurinji {
     // crates
     // actions

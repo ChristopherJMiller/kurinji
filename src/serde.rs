@@ -8,8 +8,8 @@ impl Kurinji {
     pub fn get_bindings_as_ron(&self) -> Result<String, String> {
         let data = self.get_bindings();
         let pretty = ron::ser::PrettyConfig::new()
-            .with_enumerate_arrays(true)
-            .with_new_line("\n".to_string());
+            .enumerate_arrays(true)
+            .new_line("\n".to_string());
         let serialized = ron::ser::to_string_pretty(&data, pretty);
         match serialized {
             Ok(s) => Ok(s),

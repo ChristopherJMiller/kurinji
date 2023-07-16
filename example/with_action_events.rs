@@ -8,10 +8,10 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         // setup
-        .add_plugin(KurinjiPlugin::default())
-        .add_startup_system(setup)
-        .add_system(action_active_events_system)
-        .add_system(action_end_events_system)
+        .add_plugins(KurinjiPlugin::default())
+        .add_systems(Startup, setup)
+        .add_systems(Update, action_active_events_system)
+        .add_systems(Update, action_end_events_system)
         .run();
 }
 fn setup(mut kurinji: ResMut<Kurinji>) {

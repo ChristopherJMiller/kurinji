@@ -1,6 +1,6 @@
 [package]
 name = "kurinji"
-version = "1.0.5"
+version = "1.0.6"
 edition = "2021"
 authors = ["Pradeep Kumar Rajamanickam <raj.pradeep.kumar@gmail.com>"]
 description = "Input map for bevy "
@@ -11,10 +11,10 @@ keywords = ["gamedev", "bevy", "inputmap","actionmapping"]
 
 [dependencies]
 # bevy
-bevy = { version="0.6", features = ["serialize"]}
+bevy = { version="0.11", features = ["serialize"]}
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-ron = "0.6.2"
+ron = "0.8"
 
 [[example]]
 name = "keyboard_mouse_with_code"

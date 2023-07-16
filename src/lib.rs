@@ -20,7 +20,7 @@ mod mouse;
 mod serde;
 use bevy::prelude::*;
 
-#[derive(Debug, Hash, PartialEq, Eq, Clone, SystemLabel)]
+#[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
 pub enum KurinjiStage {
     Reset,
     InputCapture,
@@ -40,33 +40,28 @@ impl Plugin for KurinjiPlugin {
             .add_event::<OnActionBegin>()
             .add_event::<OnActionProgress>()
             .add_event::<OnActionEnd>()
-            .add_system_to_stage(
-                CoreStage::PreUpdate,
+            .configure_sets(PreUpdate, (KurinjiStage::Reset, KurinjiStage::InputCapture, KurinjiStage::Event).chain())
+            .add_systems(
+                PreUpdate,
                 Kurinji::action_reset_system
                     
-                    .label(KurinjiStage::Reset),
+                    .in_set(KurinjiStage::Reset),
             )
-            .add_system_set_to_stage(
-                CoreStage::PreUpdate,
-                SystemSet::new()
-                    .label(KurinjiStage::InputCapture)
-                    .after(KurinjiStage::Reset)
-                    .with_system(Kurinji::gamepad_event_system)
-                    .with_system(
-                        Kurinji::gamepad_button_press_input_system,
-                    )
-                    .with_system(Kurinji::kb_key_press_input_system)
-                    .with_system(
-                        Kurinji::mouse_button_press_input_system,
-                    )
-                    .with_system(Kurinji::mouse_move_event_system),
+            .add_systems(
+                PreUpdate,
+                (
+                    Kurinji::gamepad_event_system,
+                    Kurinji::gamepad_button_press_input_system,
+                    Kurinji::kb_key_press_input_system,
+                    Kurinji::mouse_button_press_input_system,
+                    Kurinji::mouse_move_event_system,
+                ).in_set(KurinjiStage::InputCapture)
             )
-            .add_system_to_stage(
-                CoreStage::PreUpdate,
+            .add_systems(
+                PreUpdate,
                 Kurinji::action_event_producer
                     
-                    .label(KurinjiStage::Event)
-                    .after(KurinjiStage::InputCapture),
+                    .in_set(KurinjiStage::Event)
             );
     }
 }
